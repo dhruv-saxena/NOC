@@ -14,7 +14,7 @@ class Lifter extends VerletParticle2D {
     //    this.x = x1;
     //    this.y = y1;
     r = 6;
-    maxspeed = 2;
+    maxspeed = 5;
     maxforce = 0.1;
   }
 

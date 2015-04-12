@@ -21,7 +21,7 @@ void setup() {
   physics = new VerletPhysics2D();
   physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.1)));
   physics.setWorldBounds(new Rect(0, 0, width, ground));
-  physics.setDrag(0.01);
+  physics.setDrag(0.02);
   blanket = new Blanket(new PVector(50, 50), 20, 20, 10.0, 0.1);
   blanket.create();
   l1 = new Lifter((float)mouseX-50, (float) mouseY);
@@ -94,6 +94,7 @@ void everything() {
   if (!blanket.onFloor()) { // Blanket in air
     if (blanket.atopFire(fs.origin)) { //Blanket on top of fire, so drop it
       blanket.drop();
+      moveLiftersToFire();// This is important, it keeps the lifters going after drop
     } else //Blanket somewhere else, so take it to fire
     moveLiftersToFire();
   } else { //Blanket on ground
