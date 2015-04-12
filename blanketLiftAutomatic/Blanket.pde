@@ -57,42 +57,13 @@ class Blanket {
       }
     }
 
-    //Decide the Hinges
-    //    particles[numRows/2-1][0].lock();
-    //    particles[numRows/2-1][numCols-1].lock();
-
-    //    particles[0][0].lock();
-    //    particles[0][numCols-1].lock();
   }
 
   void drop() {
-
     drop = true;
-    //particles[0][0].unlock();
-    //particles[0][numCols-1].unlock();
-    /*
-      for(int i = 5; i<numCols-5;i++){
-     particles[numRows/2-1][i].lock();
-     }
-     */
-    /*
-      int j = 3;
-     for(int i= numRows/2; i<numRows/2+6;i++){
-     
-     particles[i][numCols/2+j].lock();
-     particles[i][numCols/2-j].lock();
-     j++;
-     }
-     
-     */
   }
 
-  void move(int x, int y) {
-    pushMatrix();
-    translate(x, y);
-    display();
-    popMatrix();
-  }
+
 
   void moveToLifters(Vec2D v1, Vec2D v2) {
     particles[0][0].set(v1);
@@ -102,7 +73,7 @@ class Blanket {
 
   void display() {
 
-    // displa the solid blanket
+    // display the solid blanket
     for (int i=0; i<numRows-1; i++) {
       for (int j=0; j<numCols-1; j++) {
         beginShape();
@@ -123,7 +94,7 @@ class Blanket {
   }
 
   // Function which returns the min distance from a Vec2D fire
-  float extinguish(Vec2D fire) {
+  boolean extinguish(Vec2D fire) {
     float min = 10000.0;
     for (int i=0; i<numRows; i++) {
       for (int j=0; j<numCols; j++) {
@@ -132,7 +103,10 @@ class Blanket {
           min = d;
       }
     }
-    return min;
+    if(min<10)
+    return true;
+    else
+    return false;
   }
 
   boolean onFloor() {

@@ -1,9 +1,6 @@
-class Particle extends VerletParticle2D{
-  
-  Particle(float x, float y){
-    super(x,y);
-    
-
+class Particle extends VerletParticle2D {
+  Particle(float x, float y) {
+    super(x, y);
   }
-  
 }
+

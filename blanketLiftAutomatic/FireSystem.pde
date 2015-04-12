@@ -3,8 +3,7 @@ class FireSystem {
   boolean extinguish = false;
 
   ArrayList<Fire> fireParticles;    // An arraylist for all the particles
-  Vec2D origin = new Vec2D(0, 0);
-  ;        // An origin point for where particles are birthed
+  Vec2D origin = new Vec2D(0, 0); // An origin point for where particles are birthed
   PImage img;
 
   FireSystem(int num, Vec2D v, PImage img_) {
@@ -27,7 +26,6 @@ class FireSystem {
   }
 
   void applyForce(Vec2D dir) {
-    // Enhanced loop!!!
     for (Fire f : fireParticles) {
       f.applyForce(dir);
     }
@@ -42,7 +40,7 @@ class FireSystem {
     Vec2D wind = new Vec2D(0, -0.1);
     applyForce(wind);
     run();
-    
+
     //adds particles untill extinguished - which means once extinguished stops adding particles
     if (!extinguish) {
       for (int i = 0; i < 2; i++) {
@@ -50,11 +48,11 @@ class FireSystem {
       }
     }
     //if there are no particles in the arraylist, create a new origin set extinguish to false
-    else if (fireParticles.size()==0){
-    extinguish = false;
-    origin.set(random(20,width-20),ground);
-    dropHeight = random(50,ground-200);
-    } 
+    else if (fireParticles.size()==0) {
+      extinguish = false;
+      origin.set(random(20, width-20), ground); // set a new fire origin
+      dropHeight = random(50, ground-100); //set a new drop height that the lifters will steer to
+    }
   }
 }
 

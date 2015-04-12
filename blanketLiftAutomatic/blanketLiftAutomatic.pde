@@ -4,13 +4,9 @@ import toxi.geom.*;
 
 VerletPhysics2D physics;
 
-float springLength = 1;
-float springStrength = 0.01;
-
 Blanket blanket;
 ArrayList<Lifter> lifters;
 Lifter l1, l2;
-
 
 float ground;
 FireSystem fs;
@@ -41,49 +37,24 @@ void draw() {
   background(#81c2b7);
   physics.update();
 
-  if (!blanket.drop)
-    blanket.moveToLifters(lifters.get(0), lifters.get(1));
-  blanket.display();
-
   everything();
 
-  /*
-  if (mousePressed)
-   blanket.drop();
-   
-   moveLifters();
-   */
-
   fs.update();
-  if (blanket.extinguish(fs.origin)<10 && fs.extinguish==false)
+  if (blanket.extinguish(fs.origin))
     fs.extinguish = true;
-    
-    displayLifters();
+
+  blanket.display();
+  displayLifters();
 }
 
-void moveLifters() {
-  Vec2D mouse = new Vec2D(mouseX, mouseY);
-  for (int i =0; i< lifters.size (); i++) {
-    Lifter l = lifters.get(i);
-    l.arrive(mouse.addSelf((float)i*200, 0));
-    l.update();
-    l.display();
-  }
-}
 
-void moveLifter(Lifter l, Vec2D t ) {
-
-  l.arrive(t);
-  l.update();
-  l.display();
-}
 
 void moveLiftersToFire() {
   Vec2D t1 = new Vec2D(fs.origin.x-100, dropHeight);
   Vec2D t2 = new Vec2D(fs.origin.x+100, dropHeight);
 
-  moveLifter(l1, t1);
-  moveLifter(l2, t2);
+  l1.moveLifter(t1);
+  l2.moveLifter(t2);
 }
 
 void moveLiftersToBlanket() {
@@ -93,8 +64,8 @@ void moveLiftersToBlanket() {
   t1.set(blanket.particles[0][0]);
   t2.set(blanket.particles[0][blanket.numCols-1]);
 
-  moveLifter(l1, t1);
-  moveLifter(l2, t2);
+  l1.moveLifter(t1);
+  l2.moveLifter(t2);
 }
 
 void displayLifters() {
@@ -103,33 +74,36 @@ void displayLifters() {
   }
 }
 
-float blanketFromLifters(){  
-float d1 = blanket.particles[0][0].distanceTo(l1);
-float d2 = blanket.particles[0][blanket.numCols-1].distanceTo(l2);
+float blanketFromLifters() {  
+  float d1 = blanket.particles[0][0].distanceTo(l1);
+  float d2 = blanket.particles[0][blanket.numCols-1].distanceTo(l2);
 
-float d = max(d1,d2);
-return d;
+  float d = max(d1, d2);
+  return d;
 }
 
- 
+
 
 void everything() {
-  if (!blanket.onFloor()) {
-    if (blanket.atopFire(fs.origin)) {
+
+  if (!blanket.drop)
+    blanket.moveToLifters(lifters.get(0), lifters.get(1));
+
+
+
+  if (!blanket.onFloor()) { // Blanket in air
+    if (blanket.atopFire(fs.origin)) { //Blanket on top of fire, so drop it
       blanket.drop();
-    } else
-      moveLiftersToFire();
-  } 
-  
-  else {
-    if(blanket.drop==true){
-   moveLiftersToBlanket();
+    } else //Blanket somewhere else, so take it to fire
+    moveLiftersToFire();
+  } else { //Blanket on ground
+    if (blanket.drop==true) {  // in drop state, i.e not being lifted yet
+      moveLiftersToBlanket();  // go towards blanket
     }
-   if (blanketFromLifters()<10){
-   blanket.drop = false;
-   moveLiftersToFire();
-   }
-   }
-   
+    if (blanketFromLifters()<10) { // almost reached
+      blanket.drop = false; // get out of drop state, and lift
+      moveLiftersToFire(); //take the blanket to fire again
+    }
+  }
 }
 
